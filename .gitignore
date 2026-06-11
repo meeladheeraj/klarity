@@ -15,6 +15,7 @@ local.properties
 *.iml
 
 # Xcode / Swift Package Manager
+.build/
 xcuserdata/
 DerivedData/
 .swiftpm/
