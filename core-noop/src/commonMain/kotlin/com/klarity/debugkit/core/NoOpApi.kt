@@ -91,6 +91,7 @@ object DebugCrashReporter {
 
 // --- top-level helpers ---
 const val REDACTED_PLACEHOLDER = "***REDACTED***"
+fun HttpEvent.toCurl(): String = ""
 fun nowMillis(): Long = 0L
 fun nextEventId(): String = ""
 fun installCrashHandler() { /* no-op */ }

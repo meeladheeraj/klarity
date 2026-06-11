@@ -1,6 +1,7 @@
 package com.klarity.debugkit.ui.rows
 
 import androidx.compose.runtime.Composable
+import com.klarity.debugkit.core.CrashEvent
 import com.klarity.debugkit.core.DebugEvent
 import com.klarity.debugkit.core.HttpEvent
 import com.klarity.debugkit.core.LogEvent
@@ -15,5 +16,6 @@ internal fun EventRow(event: DebugEvent, expanded: Boolean, onClick: () -> Unit)
     when (event) {
         is HttpEvent -> HttpEventRow(event, expanded, onClick)
         is LogEvent -> LogEventRow(event)
+        is CrashEvent -> CrashEventRow(event, expanded, onClick)
     }
 }

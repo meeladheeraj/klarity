@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.klarity.debugkit.core.HttpEvent
+import com.klarity.debugkit.core.toCurl
 import com.klarity.debugkit.ui.asHeaderText
 import com.klarity.debugkit.ui.components.DetailBlock
 import com.klarity.debugkit.ui.theme.statusColor
@@ -42,6 +43,7 @@ internal fun HttpEventRow(event: HttpEvent, expanded: Boolean, onClick: () -> Un
             DetailBlock("Request headers", event.requestHeaders.asHeaderText())
             DetailBlock("Response headers", event.responseHeaders.asHeaderText())
             DetailBlock("Response body", event.responseBody ?: "(none)")
+            DetailBlock("cURL", event.toCurl())
         }
     }
 }
