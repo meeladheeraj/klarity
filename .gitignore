@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Machine-specific — never commit (contains your absolute SDK path)
+local.properties
+
+# Kotlin
+.kotlin/
+.konan/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Xcode / Swift Package Manager
+xcuserdata/
+DerivedData/
+.swiftpm/
+*.xcuserstate
+
+# macOS
+.DS_Store
