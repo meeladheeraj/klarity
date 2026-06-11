@@ -25,4 +25,10 @@ object DebugBus {
     suspend fun emit(event: DebugEvent) {
         _events.emit(event)
     }
+
+    /**
+     * Non-suspending emit for fire-and-forget producers (logger, crash hook) that can't
+     * suspend. Succeeds as long as buffer space is free; returns false if it would block.
+     */
+    fun tryEmit(event: DebugEvent): Boolean = _events.tryEmit(event)
 }

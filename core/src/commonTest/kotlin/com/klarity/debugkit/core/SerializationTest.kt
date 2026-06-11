@@ -30,4 +30,16 @@ class SerializationTest {
         assertTrue(back is HttpEvent)
         assertEquals(original, back)
     }
+
+    @Test
+    fun crashEventSerializesAndRoundTrips() {
+        val original: DebugEvent = CrashEvent(
+            id = "9", timestamp = 1, errorType = "IllegalStateException",
+            message = "boom", stackTrace = "at x\nat y",
+        )
+        val text = Json.encodeToString(original)
+        assertTrue(text.contains("\"type\":\"crash\""), "missing discriminator in: $text")
+        val back = Json.decodeFromString<DebugEvent>(text)
+        assertEquals(original, back)
+    }
 }

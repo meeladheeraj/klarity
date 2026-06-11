@@ -27,6 +27,7 @@ data class LogEvent(
     override val id: String,
     override val timestamp: Long,
     val message: String,
+    val level: String = "INFO",
 ) : DebugEvent
 
 data class HttpEvent(
@@ -42,10 +43,19 @@ data class HttpEvent(
     val responseBodyTruncated: Boolean = false,
 ) : DebugEvent
 
+data class CrashEvent(
+    override val id: String,
+    override val timestamp: Long,
+    val errorType: String,
+    val message: String?,
+    val stackTrace: String,
+) : DebugEvent
+
 // --- bus: an always-empty stream; emit does nothing ---
 object DebugBus {
     val events: SharedFlow<DebugEvent> = MutableSharedFlow<DebugEvent>().asSharedFlow()
     suspend fun emit(event: DebugEvent) { /* no-op */ }
+    fun tryEmit(event: DebugEvent): Boolean = false
 }
 
 // --- store: forever empty ---
@@ -65,10 +75,25 @@ object DebugKit {
     var maxBodyChars: Int = Int.MAX_VALUE
 }
 
+// --- producers: inert ---
+object DebugLog {
+    fun d(message: String) {}
+    fun i(message: String) {}
+    fun w(message: String) {}
+    fun e(message: String) {}
+}
+
+object DebugCrashReporter {
+    fun report(throwable: Throwable) {}
+    fun crashEvent(throwable: Throwable): CrashEvent =
+        CrashEvent(id = "", timestamp = 0, errorType = "", message = null, stackTrace = "")
+}
+
 // --- top-level helpers ---
 const val REDACTED_PLACEHOLDER = "***REDACTED***"
 fun nowMillis(): Long = 0L
 fun nextEventId(): String = ""
+fun installCrashHandler() { /* no-op */ }
 fun redactHeaderMap(headers: Map<String, String>): Map<String, String> = headers
 
 data class TruncatedBody(val text: String?, val truncated: Boolean)

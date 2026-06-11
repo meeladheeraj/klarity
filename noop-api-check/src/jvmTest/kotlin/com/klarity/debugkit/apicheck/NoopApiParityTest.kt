@@ -24,8 +24,8 @@ class NoopApiParityTest {
 
     // The public named types the real core exposes (top-level functions handled separately).
     private val apiTypes = listOf(
-        "DebugKit", "EventStore", "DebugBus",
-        "DebugEvent", "LogEvent", "HttpEvent", "TruncatedBody",
+        "DebugKit", "EventStore", "DebugBus", "DebugLog", "DebugCrashReporter",
+        "DebugEvent", "LogEvent", "HttpEvent", "CrashEvent", "TruncatedBody",
     )
 
     @Test

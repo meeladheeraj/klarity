@@ -30,6 +30,7 @@ data class LogEvent(
     override val id: String,
     override val timestamp: Long,
     val message: String,
+    val level: String = "INFO",
 ) : DebugEvent
 
 /** A captured HTTP request/response. Emitted by the Ktor interceptor. */
@@ -46,4 +47,15 @@ data class HttpEvent(
     val responseHeaders: Map<String, String> = emptyMap(),
     val responseBody: String? = null,
     val responseBodyTruncated: Boolean = false,
+) : DebugEvent
+
+/** An uncaught exception captured by the crash hook. */
+@Serializable
+@SerialName("crash")
+data class CrashEvent(
+    override val id: String,
+    override val timestamp: Long,
+    val errorType: String, // NB: not `type` — that's the polymorphic JSON discriminator
+    val message: String?,
+    val stackTrace: String,
 ) : DebugEvent

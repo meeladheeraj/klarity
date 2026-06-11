@@ -46,6 +46,7 @@ object DebugKit {
     fun install() {
         if (installed) return
         installed = true
+        installCrashHandler() // record uncaught exceptions as CrashEvents
         scope.launch {
             DebugBus.events.collect { event ->
                 store.record(event)

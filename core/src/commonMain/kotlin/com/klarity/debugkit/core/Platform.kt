@@ -10,6 +10,13 @@ package com.klarity.debugkit.core
 expect fun nowMillis(): Long
 
 /**
+ * Installs a process-wide handler that records uncaught exceptions as [CrashEvent]s.
+ * Each platform hooks differently (JVM/Android: Thread handler; iOS: Kotlin/Native hook),
+ * so this is `expect`/`actual`. Called by [DebugKit.install].
+ */
+expect fun installCrashHandler()
+
+/**
  * A monotonically increasing event id. Plain shared Kotlin — no platform API needed,
  * so it lives entirely in commonMain.
  *
