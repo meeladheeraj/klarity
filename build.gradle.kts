@@ -35,7 +35,7 @@ subprojects {
                     description.set(
                         "Kotlin Multiplatform debug toolkit — Ktor HTTP capture, a Compose overlay, and a live web viewer."
                     )
-                    url.set("https://github.com/klarity/debugkit")
+                    url.set("https://github.com/meeladheeraj/klarity")
                     licenses {
                         license {
                             name.set("The Apache License, Version 2.0")
@@ -49,9 +49,9 @@ subprojects {
                         }
                     }
                     scm {
-                        url.set("https://github.com/klarity/debugkit")
-                        connection.set("scm:git:https://github.com/klarity/debugkit.git")
-                        developerConnection.set("scm:git:ssh://git@github.com/klarity/debugkit.git")
+                        url.set("https://github.com/meeladheeraj/klarity")
+                        connection.set("scm:git:https://github.com/meeladheeraj/klarity.git")
+                        developerConnection.set("scm:git:ssh://git@github.com/meeladheeraj/klarity.git")
                     }
                 }
             }
