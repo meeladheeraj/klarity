@@ -10,6 +10,10 @@ let package = Package(
     products: [
         .library(name: "DebugKitURLSession", targets: ["DebugKitURLSession"]),
     ],
+    dependencies: [
+        // Tiny async HTTP server — powers the in-app web viewer.
+        .package(url: "https://github.com/swhitty/FlyingFox.git", .upToNextMajor(from: "0.26.0")),
+    ],
     targets: [
         // The Kotlin Multiplatform framework (binary). For distribution you'd host the
         // .xcframework + checksum; this local path points at the Gradle build output.
@@ -19,7 +23,10 @@ let package = Package(
         ),
         .target(
             name: "DebugKitURLSession",
-            dependencies: ["DebugKit"]
+            dependencies: [
+                "DebugKit",
+                .product(name: "FlyingFox", package: "FlyingFox"),
+            ]
         ),
     ]
 )

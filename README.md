@@ -2,7 +2,7 @@
 
 **A Kotlin Multiplatform debug toolkit — HTTP capture for Ktor, an in-app Compose overlay, and a live web viewer you open in any browser.**
 
-Capture runs on **JVM, Android, and iOS**. View traffic in an in-app overlay, or stream it live to any browser on your network — no install, no cable. (The browser viewer is hosted from a JVM process today; in-app hosting on Android/iOS is the next milestone — see below.)
+Capture runs on **JVM, Android, and iOS**. View traffic in an in-app overlay, or stream it live to any browser on your network — no install, no cable. (Browser viewer: JVM desktop via `./gradlew :ui:run`, or **in-app on iOS** via `DebugKitWebViewer.start()`.)
 
 > Status: **v0.1.0** · JVM · Android · iOS · *(early — APIs may change)*
 
@@ -130,6 +130,8 @@ In a **release** build, the no-op artifacts replace `core` / `interceptor-ktor`:
 
 On iOS, capture works two ways depending on how your app makes HTTP calls. Swift reads the captured events through the framework either way.
 
+> **Scope note:** the **Ktor (shared Kotlin)** path below is the canonical, write-once KMP route. The **`URLSession`** path uses the optional **`DebugKitURLSession`** adapter — a non-KMP add-on **beyond core v1** (native `URLSession` interception is out of scope for v1). See [`swift/DebugKitURLSession/README.md`](swift/DebugKitURLSession/README.md).
+
 **1. Build & embed the framework:**
 
 ```bash
@@ -167,12 +169,17 @@ import io.ktor.client.engine.darwin.Darwin
 val httpClient = HttpClient(Darwin) { install(DebugKitPlugin) }
 ```
 
-**3. View the captured events** — drop in the prebuilt SwiftUI screen (live list, tap-to-expand, Clear):
+**3. View the captured events** — three ways:
 
+*In-app SwiftUI screen* (live list, tap-to-expand, Clear):
 ```swift
 import DebugKitURLSession
+.sheet(isPresented: $showDebug) { DebugKitView() }       // e.g. behind a shake gesture
+```
 
-.sheet(isPresented: $showDebug) { DebugKitView() }
+*In a browser on your laptop* (same Wi-Fi):
+```swift
+DebugKitWebViewer.start()        // at launch (debug); prints http://<phone-ip>:8080
 ```
 
 …or read them yourself:
@@ -203,7 +210,10 @@ Notes for Swift consumers:
 - tap a row for headers + body
 - zero install — it's just a WebSocket streaming JSON; the browser holds no state
 
-> **Current state:** the viewer is hosted from a JVM process today (e.g. the desktop demo, `./gradlew :ui:run`). Embedding the server inside the Android/iOS app process — so you browse straight to the device — is the next milestone, and the reason the viewer is kept a stateless terminal.
+Where it runs:
+- **Desktop/JVM** — the `server` module, started for you by `./gradlew :ui:run`.
+- **iOS** — an embedded server in the Swift layer. Call `DebugKitWebViewer.start()` at launch and open the printed `http://<phone-ip>:8080` on your laptop. (Polls `/events.json` once a second; the browser stays a stateless terminal.)
+- **Android** in-app hosting is still on the roadmap.
 
 ---
 
