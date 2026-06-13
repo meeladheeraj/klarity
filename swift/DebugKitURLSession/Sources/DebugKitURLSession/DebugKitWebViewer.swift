@@ -120,22 +120,29 @@ public enum DebugKitWebViewer {
     <body>
     <h2>Network <span id="count">0</span></h2>
     <div id="status">connecting…</div>
+    <input id="filter" oninput="render(lastEvents)" placeholder="filter by method / url / status / message"
+           style="width:100%;box-sizing:border-box;padding:6px 10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;font-size:14px;"/>
     <table>
      <thead><tr><th>Status</th><th>Method</th><th>URL</th><th>Time</th></tr></thead>
      <tbody id="rows"></tbody>
     </table>
     <script>
      var expanded = {};
+     var lastEvents = [];
      function cls(code){ if(code==null) return ''; if(code<300) return 's2'; if(code<400) return 's3'; if(code<500) return 's4'; return 's5'; }
      function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
      function headersText(h){ if(!h) return ''; return Object.keys(h).map(function(k){ return k+': '+h[k]; }).join('\\n'); }
+     function matches(ev, q){ if(!q) return true; return ((ev.url||'')+' '+(ev.method||'')+' '+(ev.statusCode||'')+' '+(ev.message||'')).toLowerCase().indexOf(q) >= 0; }
      function render(events){
-       document.getElementById('count').textContent = events.length;
+       lastEvents = events;
        document.getElementById('status').textContent = 'connected — live';
+       var q = (document.getElementById('filter').value || '').toLowerCase();
+       var shown = events.filter(function(ev){ return matches(ev, q); });
+       document.getElementById('count').textContent = q ? (shown.length + ' / ' + events.length) : events.length;
        var rows = document.getElementById('rows');
        rows.innerHTML = '';
-       for (var i = events.length - 1; i >= 0; i--) {   // newest first
-         var ev = events[i];
+       for (var i = shown.length - 1; i >= 0; i--) {   // newest first
+         var ev = shown[i];
          if (ev.type === 'http') {
            var tr = document.createElement('tr');
            tr.className = 'row';
@@ -143,7 +150,7 @@ public enum DebugKitWebViewer {
              + '<td>'+esc(ev.method)+'</td>'
              + '<td class="mono">'+esc(ev.url)+'</td>'
              + '<td class="dur">'+esc(ev.durationMs)+'ms</td>';
-           (function(id){ tr.onclick = function(){ expanded[id] = !expanded[id]; render(events); }; })(ev.id);
+           (function(id){ tr.onclick = function(){ expanded[id] = !expanded[id]; render(lastEvents); }; })(ev.id);
            rows.appendChild(tr);
            if (expanded[ev.id]) {
              var d = document.createElement('tr'); d.className = 'detail';
