@@ -3,7 +3,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.kotlin.multiplatform.library")
-    id("maven-publish")
+    id("com.vanniktech.maven.publish")
 }
 
 kotlin {
