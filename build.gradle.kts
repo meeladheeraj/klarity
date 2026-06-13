@@ -20,14 +20,26 @@ subprojects {
     // Configured once for any module that applies the vanniktech publish plugin (the 4 library
     // modules). It handles POM, sources + javadoc jars, and the Central Portal upload.
     plugins.withId("com.vanniktech.maven.publish") {
+        // Two signing paths: in-memory (CI-friendly) OR the local `gpg` binary (set
+        // -Psigning.gnupg.keyName=...). gpg-cmd is the robust path for modern GnuPG whose
+        // secret-key format Gradle's bundled BouncyCastle can't always read.
+        val gpgKeyName = providers.gradleProperty("signing.gnupg.keyName")
+        val hasInMemoryKey = providers.environmentVariable("ORG_GRADLE_PROJECT_signingInMemoryKey").isPresent ||
+            providers.gradleProperty("signingInMemoryKey").isPresent
+
+        if (gpgKeyName.isPresent) {
+            // vanniktech applies the `signing` plugin itself (via signAllPublications), so wait
+            // for it before configuring the signatory.
+            plugins.withId("signing") {
+                extensions.configure<org.gradle.plugins.signing.SigningExtension> { useGpgCmd() }
+            }
+        }
+
         configure<MavenPublishBaseExtension> {
             publishToMavenCentral() // the new Central Portal (no-arg default)
 
-            // Sign only when a key is present, so `publishToMavenLocal` works keyless locally;
-            // CI provides ORG_GRADLE_PROJECT_signingInMemoryKey (+ Id/Password) to sign.
-            if (providers.environmentVariable("ORG_GRADLE_PROJECT_signingInMemoryKey").isPresent ||
-                providers.gradleProperty("signingInMemoryKey").isPresent
-            ) {
+            // Sign only when a key is configured, so `publishToMavenLocal` works keyless locally.
+            if (hasInMemoryKey || gpgKeyName.isPresent) {
                 signAllPublications()
             }
 
