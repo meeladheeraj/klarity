@@ -53,12 +53,12 @@ Published with Gradle Module Metadata, so one coordinate resolves the right vari
 
 ```kotlin
 dependencies {
-    debugImplementation("com.klarity.debugkit:core:0.1.0")
-    debugImplementation("com.klarity.debugkit:interceptor-ktor:0.1.0")
+    debugImplementation("io.github.meeladheeraj:core:0.1.0")
+    debugImplementation("io.github.meeladheeraj:interceptor-ktor:0.1.0")
 
     // The toolkit COMPILES OUT of release builds: identical API, empty bodies.
-    releaseImplementation("com.klarity.debugkit:core-noop:0.1.0")
-    releaseImplementation("com.klarity.debugkit:interceptor-ktor-noop:0.1.0")
+    releaseImplementation("io.github.meeladheeraj:core-noop:0.1.0")
+    releaseImplementation("io.github.meeladheeraj:interceptor-ktor-noop:0.1.0")
 }
 ```
 

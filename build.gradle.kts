@@ -14,7 +14,7 @@ plugins {
 }
 
 subprojects {
-    group = "com.klarity.debugkit"
+    group = "io.github.meeladheeraj" // verified Maven Central namespace (Kotlin package stays com.klarity.debugkit)
     version = "0.1.0"
 
     // Configured once for any module that applies the vanniktech publish plugin (the 4 library
