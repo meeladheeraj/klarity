@@ -8,7 +8,8 @@ import org.gradle.plugins.signing.SigningExtension
 plugins {
     kotlin("multiplatform") version "2.3.0" apply false
     kotlin("plugin.serialization") version "2.3.0" apply false // JSON for the web viewer
-    id("com.android.kotlin.multiplatform.library") version "8.7.3" apply false // modern KMP Android target
+    id("com.android.kotlin.multiplatform.library") version "8.7.3" apply false // modern KMP Android target (non-Compose modules)
+    id("com.android.library") version "8.7.3" apply false // used by :ui — Compose MP's Android support needs this one
     id("org.jetbrains.compose") version "1.11.1" apply false
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.0" apply false // Compose compiler, matches Kotlin
 }

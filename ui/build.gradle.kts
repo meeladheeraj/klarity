@@ -8,10 +8,17 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
+    // Compose Multiplatform's Android support integrates with the classic library plugin,
+    // not the new com.android.kotlin.multiplatform.library (incompatible at AGP 8.7.3).
+    id("com.android.library")
 }
 
 kotlin {
-    jvm("desktop") // a JVM target we can run as a native desktop window from the terminal
+    jvm("desktop")       // a JVM target we can run as a native desktop window from the terminal
+    androidTarget()      // the overlay as an Android Compose component
+    // Compose MP's androidx deps no longer ship iosX64 (Intel sim); arm64 device + Apple-Silicon sim only.
+    iosArm64()           // the overlay rendered by Compose Multiplatform on iOS (device)
+    iosSimulatorArm64()  // Apple-Silicon simulator
 
     sourceSets {
         commonMain.dependencies {
@@ -19,6 +26,7 @@ kotlin {
             implementation(compose.runtime)     // @Composable, state
             implementation(compose.foundation)  // layout, LazyColumn, clickable
             implementation(compose.material3)   // Material 3 widgets + theme
+            implementation(compose.ui)          // ComposeUIViewController (iOS), core ui
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         }
         val desktopMain by getting {
@@ -30,6 +38,14 @@ kotlin {
                 implementation("io.ktor:ktor-client-mock:3.0.3") // fake traffic source
             }
         }
+    }
+}
+
+android {
+    namespace = "com.klarity.debugkit.ui"
+    compileSdk = 35
+    defaultConfig {
+        minSdk = 24
     }
 }
 
