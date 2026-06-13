@@ -1,10 +1,10 @@
 # Launch post — drafts
 
-> DRAFT for v0.1.0. Finalize at launch. Repo: https://github.com/meeladheeraj/klarity
+> DRAFT for v0.1.0. Repo: https://github.com/meeladheeraj/klarity
+> **Published to Maven Central** as `io.github.meeladheeraj:<module>:0.1.0`.
 > Honesty guardrails (don't overclaim): capture is **Ktor-only** in the KMP core; the
 > browser viewer runs **JVM-hosted today** (in-app device hosting is the next milestone);
 > a separate **Swift adapter** covers `URLSession` apps + an in-app iOS web server.
-> Fill in the Maven coordinate once actually published to Central.
 
 ---
 

@@ -4,7 +4,7 @@
 
 Capture runs on **JVM, Android, and iOS**. View traffic in an in-app overlay, or stream it live to any browser on your network — no install, no cable. (Browser viewer: JVM desktop via `./gradlew :ui:run`, or **in-app on iOS** via `DebugKitWebViewer.start()`.)
 
-> Status: **v0.1.0** · JVM · Android · iOS · *(early — APIs may change)*
+> Status: **v0.1.0 on Maven Central** (`io.github.meeladheeraj`) · JVM · Android · iOS · *(early — APIs may change)*
 
 ---
 
