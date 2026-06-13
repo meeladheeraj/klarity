@@ -1,10 +1,16 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("com.android.kotlin.multiplatform.library")
 }
 
 kotlin {
     jvm()
+    androidLibrary {     // so the embedded web viewer can run inside an Android app
+        namespace = "com.klarity.debugkit.server"
+        compileSdk = 35
+        minSdk = 24
+    }
 
     sourceSets {
         commonMain.dependencies {
