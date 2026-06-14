@@ -73,6 +73,7 @@ object DebugKit {
     fun redactHeaders(vararg names: String) { /* no-op */ }
     fun isHeaderRedacted(name: String): Boolean = false
     var maxBodyChars: Int = Int.MAX_VALUE
+    fun enablePersistence(directory: String) { /* no-op */ }
 }
 
 // --- producers: inert ---

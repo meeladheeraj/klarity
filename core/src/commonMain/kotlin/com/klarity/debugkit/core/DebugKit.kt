@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import okio.FileSystem
+import okio.Path.Companion.toPath
 
 /**
  * The public entry point of the toolkit (the start of the plan's `DebugKit.install()` API).
@@ -50,6 +52,26 @@ object DebugKit {
         scope.launch {
             DebugBus.events.collect { event ->
                 store.record(event)
+            }
+        }
+    }
+
+    // --- persistence (survive process restart; roadmap Phase 2) -------------
+    /**
+     * Persist captured events to `<directory>/debugkit-events.json`: loads any saved events on
+     * call, then writes the store to disk on every change. So logs/crashes survive a restart
+     * (the overlay/viewer shows the last run on next launch).
+     *
+     * Pass an app-writable directory — e.g. Android `context.filesDir.path`, iOS the Documents
+     * dir. (Note: writes are async; a crash that kills the process instantly may miss its very
+     * last event — a synchronous crash-flush is a future refinement.)
+     */
+    fun enablePersistence(directory: String) {
+        val file = directory.toPath() / "debugkit-events.json"
+        loadEvents(FileSystem.SYSTEM, file).forEach { store.record(it) }
+        scope.launch {
+            store.events.collect { events ->
+                runCatching { persistEvents(FileSystem.SYSTEM, file, events) }
             }
         }
     }

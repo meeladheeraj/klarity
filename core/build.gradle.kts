@@ -20,9 +20,11 @@ kotlin {
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+            implementation("com.squareup.okio:okio:3.17.0") // multiplatform file I/O for persistence
         }
         commonTest.dependencies {
             implementation(kotlin("test")) // JUnit on JVM, native runner on iOS — one source, every target
+            implementation("com.squareup.okio:okio-fakefilesystem:3.17.0")
         }
     }
 }
